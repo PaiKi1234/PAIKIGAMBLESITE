@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PAIKI GAMBLE</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>PAIKI GAMBLE</h1>
+      <div id="credits">Credits: <span id="credit-count">1000</span></div>
+    </header>
+    <nav>
+      <button onclick="showGame('slots')">🎰 Slot Machine</button>
+      <button onclick="showGame('roulette')">🎲 Roulette</button>
+      <button onclick="showGame('poker')">🃏 Poker / Blackjack</button>
+      <button onclick="showGame('trivia')">❓ Trivia Bet</button>
+      <button onclick="showGame('match')">🏆 Match Betting</button>
+    </nav>
+    <main>
+      <div id="welcome" class="game-screen active">
+        <h2>Welcome to Paiki Gamble!</h2>
+        <p>Try your luck with our games – win big, lose loud, and come back tomorrow for a bonus!</p>
+        <button onclick="dailyBonus()">Claim Daily Bonus</button>
+      </div>
+      <!-- Slot Machine -->
+      <div id="slots" class="game-screen">
+        <h2>Slot Machine</h2>
+        <button onclick="playSlots()">Spin (100 credits)</button>
+        <p id="slot-result"></p>
+      </div>
+      <!-- Roulette -->
+      <div id="roulette" class="game-screen">
+        <h2>Roulette</h2>
+        <input id="roulette-bet" type="number" placeholder="Bet amount">
+        <button onclick="playRoulette()">Play</button>
+        <p id="roulette-result"></p>
+      </div>
+      <!-- Poker / Blackjack (simple) -->
+      <div id="poker" class="game-screen">
+        <h2>Poker / Blackjack (Very Simple Version)</h2>
+        <button onclick="playPoker()">Deal a hand (200 credits)</button>
+        <p id="poker-result"></p>
+      </div>
+      <!-- Trivia Bet -->
+      <div id="trivia" class="game-screen">
+        <h2>Trivia Bet</h2>
+        <p>Which planet is known as the Red Planet?</p>
+        <button onclick="playTrivia('Mars')">Mars</button>
+        <button onclick="playTrivia('Venus')">Venus</button>
+        <button onclick="playTrivia('Jupiter')">Jupiter</button>
+        <p id="trivia-result"></p>
+      </div>
+      <!-- Match Betting -->
+      <div id="match" class="game-screen">
+        <h2>Match Betting</h2>
+        <p>Team A vs Team B — predict the winner!</p>
+        <button onclick="playMatch('A')">Team A</button>
+        <button onclick="playMatch('B')">Team B</button>
+        <button onclick="playMatch('Draw')">Draw</button>
+        <p id="match-result"></p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let credits = 1000;
+    const creditDisplay = document.getElementById('credit-count');
+    const screens = document.querySelectorAll('.game-screen');
+
+    function updateCredits(amount) {
+      credits += amount;
+      creditDisplay.textContent = credits;
+    }
+
+    function showGame(id) {
+      screens.forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function dailyBonus() {
+      alert('You got 500 bonus credits! Come back tomorrow for another bonus 😉');
+      updateCredits(500);
+    }
+
+    function playSlots() {
+      const outcome = Math.random();
+      let result;
+      if (outcome < 0.05) { result = 'Jackpot! +500'; updateCredits(500); }
+      else if (outcome < 0.20) { result = 'Small win! +100'; updateCredits(100); }
+      else { result = 'Tough luck... -100'; updateCredits(-100); }
+      document.getElementById('slot-result').textContent = result;
+    }
+
+    function playRoulette() {
+      const bet = parseInt(document.getElementById('roulette-bet').value) || 0;
+      const win = Math.random() < (1/37);
+      if (win) { updateCredits(bet * 36); document.getElementById('roulette-result').textContent = 'You won! +' + bet*36; }
+      else { updateCredits(-bet); document.getElementById('roulette-result').textContent = 'You lost -' + bet; }
+    }
+
+    function playPoker() {
+      const outcome = Math.random();
+      let result;
+      if (outcome < 0.1) { result = 'Blackjack! +400'; updateCredits(400); }
+      else if (outcome < 0.4) { result = 'You won the hand! +100'; updateCredits(100); }
+      else { result = 'You lost -200'; updateCredits(-200); }
+      document.getElementById('poker-result').textContent = result;
+    }
+
+    function playTrivia(ans) {
+      if (ans === 'Mars') { updateCredits(200); document.getElementById('trivia-result').textContent = 'Correct! +200'; }
+      else { updateCredits(-50); document.getElementById('trivia-result').textContent = 'Wrong... -50'; }
+    }
+
+    function playMatch(pick) {
+      const r = ['A','B','Draw'][Math.floor(Math.random() * 3)];
+      if (pick === r) { updateCredits(300); document.getElementById('match-result').textContent = 'You guessed right! +300'; }
+      else { updateCredits(-100); document.getElementById('match-result').textContent = 'Wrong guess -100'; }
+    }
+  </script>
+</body>
+</html>
